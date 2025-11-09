@@ -20,6 +20,7 @@ def archive_today_playlist():
     today = datetime.now().strftime("%Y-%m-%d")
     archive_path = os.path.join(ARCHIVE_DIR, f"playlist-{today}.m3u")
     if not os.path.exists(archive_path):
+        print(f"Archivieren: {archive_path}")
         content = read_file(BASE_PLAYLIST)
         write_file(archive_path, content)
 
@@ -31,22 +32,26 @@ def cleanup_old_archives():
             try:
                 file_date = datetime.strptime(date_str, "%Y-%m-%d")
                 if file_date < cutoff:
+                    print(f"Entferne alte Datei: {filename}")
                     os.remove(os.path.join(ARCHIVE_DIR, filename))
             except ValueError:
                 pass
 
 def build_combined_playlist():
     combined = "#EXTM3U\n"
+    # Optional: EPG URL einfügen
     combined += 'x-tvg-url="https://epg.teleguide.info/ru/epg.xml"\n'
+    
     dates = [(datetime.now() - timedelta(days=i)).strftime("%Y-%m-%d") for i in range(DAYS_TO_KEEP)]
     for date_str in dates:
         path = os.path.join(ARCHIVE_DIR, f"playlist-{date_str}.m3u")
         if os.path.exists(path):
             content = read_file(path)
             lines = [line for line in content.splitlines() if not line.startswith("#EXTM3U")]
-            combined += f"\n# Playlist vom {date_str}\n"
+            combined += f"\n# Archiv vom {date_str}\n"
             combined += "\n".join(lines) + "\n"
     write_file(OUTPUT_PLAYLIST, combined)
+    print(f"Erstellt kombinierte Playlist: {OUTPUT_PLAYLIST}")
 
 if __name__ == "__main__":
     archive_today_playlist()
