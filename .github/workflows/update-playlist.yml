@@ -2,7 +2,7 @@ name: Update IPTV Playlist
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # täglich Mitternacht UTC
+    - cron: '0 0 * * *'  # täglich um Mitternacht UTC
   workflow_dispatch:
 
 jobs:
@@ -11,8 +11,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v4
