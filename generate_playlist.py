@@ -39,9 +39,9 @@ def cleanup_old_archives():
 
 def build_combined_playlist():
     combined = "#EXTM3U\n"
-    # Optional: EPG URL einfügen
+    # Optional: EPG URL einfügen (wenn du willst)
     combined += 'x-tvg-url="https://epg.teleguide.info/ru/epg.xml"\n'
-    
+
     dates = [(datetime.now() - timedelta(days=i)).strftime("%Y-%m-%d") for i in range(DAYS_TO_KEEP)]
     for date_str in dates:
         path = os.path.join(ARCHIVE_DIR, f"playlist-{date_str}.m3u")
