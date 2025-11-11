@@ -1,0 +1,36 @@
+#EXTM3U
+
+# Live-Kanäle
+#EXTINF:-1 tvg-id="ntv" tvg-name="NTV" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/5/59/NTV_logo.png" group-title="Russia",NTV
+https://livetv.mylifeisgood.net.ru/channels/ntvhd.m3u8
+
+#EXTINF:-1 tvg-id="russia1" tvg-name="Rossiya 1" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/2/20/Россия-1_logo.png" group-title="Russia",Rossiya 1
+https://vgtrkregion-reg.cdnvideo.ru/vgtrk/volgograd/russia1-hd/index.m3u8
+
+# Archiv-Kanäle der letzten 3 Tage
+#EXTINF:-1 tvg-id="ntv-archiv-20251107" tvg-name="NTV Archiv 2025-11-07" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/5/59/NTV_logo.png" group-title="Russia Archiv",NTV Archiv 2025-11-07
+https://legxnd7.github.io/iptv-playlists/archive/playlist-2025-11-07.m3u
+
+#EXTINF:-1 tvg-id="russia1-archiv-20251107" tvg-name="Rossiya 1 Archiv 2025-11-07" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/2/20/Россия-1_logo.png" group-title="Russia Archiv",Rossiya 1 Archiv 2025-11-07
+https://legxnd7.github.io/iptv-playlists/archive/playlist-2025-11-07.m3u
+
+# Playlist-Archiv vom 2025-11-11
+#EXTINF:-1 tvg-id="ntv" tvg-name="NTV" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/5/59/NTV_logo.png" group-title="Russia",NTV
+https://livetv.mylifeisgood.net.ru/channels/ntvhd.m3u8
+#EXTINF:-1 tvg-id="russia1" tvg-name="Rossiya 1" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/2/20/Россия-1_logo.png" group-title="Russia",Rossiya 1
+https://vgtrkregion-reg.cdnvideo.ru/vgtrk/volgograd/russia1-hd/index.m3u8
+
+
+
+
+# Playlist-Archiv vom 2025-11-10
+#EXTINF:-1 tvg-id="ntv" tvg-name="NTV" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/5/59/NTV_logo.png" group-title="Russia",NTV
+https://livetv.mylifeisgood.net.ru/channels/ntvhd.m3u8
+#EXTINF:-1 tvg-id="russia1" tvg-name="Rossiya 1" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/2/20/Россия-1_logo.png" group-title="Russia",Rossiya 1
+https://vgtrkregion-reg.cdnvideo.ru/vgtrk/volgograd/russia1-hd/index.m3u8
+
+
+
+
+# Playlist-Archiv vom 2025-11-09
+
