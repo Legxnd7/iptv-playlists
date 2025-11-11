@@ -36,6 +36,6 @@ jobs:
           try {
             git commit -m "Auto-update IPTV archive $(Get-Date -Format 'yyyy-MM-dd HH:mm')" 
           } catch {
-            Write-Host "Keine Änderungen zum Commit"
+            Write-Host "Keine Aenderungen zum Commit"
           }
           git push
