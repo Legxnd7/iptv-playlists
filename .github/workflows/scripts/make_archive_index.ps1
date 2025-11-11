@@ -1,0 +1,18 @@
+Param(
+  [string]$outRoot = "C:\Users\Oliver\Desktop\IPTV-Archiv",
+  [string]$indexFile = ".\archive\archive_index.json"
+)
+
+$map = @{}
+if (!(Test-Path $outRoot)) { New-Item -ItemType Directory -Path $outRoot | Out-Null }
+
+Get-ChildItem -Directory -Path $outRoot | ForEach-Object {
+    $slug = $_.Name
+    $files = Get-ChildItem -File -Path $_.FullName | Sort-Object LastWriteTime -Descending
+    $dates = $files | ForEach-Object { $_.BaseName -replace '^[^-]+-','' }
+    $map[$slug] = $dates
+}
+if (!(Test-Path (Split-Path $indexFile -Parent))) { New-Item -ItemType Directory -Path (Split-Path $indexFile -Parent) -Force | Out-Null }
+$json = $map | ConvertTo-Json -Depth 10
+$json | Out-File -FilePath $indexFile -Encoding UTF8
+Write-Output "Wrote index to $indexFile"
