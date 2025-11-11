@@ -3,11 +3,11 @@ name: Update IPTV Archive
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */6 * * *'  # alle 6 Stunden automatisch ausführen
+    - cron: '0 */6 * * *'  # alle 6 Stunden
 
 jobs:
   update-archive:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest  # oder self-hosted, je nachdem
 
     steps:
       - name: Repository auschecken
@@ -16,24 +16,23 @@ jobs:
       - name: Erstelle Archiv-Ordner (falls nicht vorhanden)
         shell: powershell
         run: |
-          $archivePath = "C:\Users\Oliver\Desktop\IPTV-Archiv\archive"
+          $archivePath = "archive"
           if (-not (Test-Path $archivePath)) {
             New-Item -ItemType Directory -Path $archivePath | Out-Null
           }
 
-      - name: Lade aktuelle Playlist herunter (Windows-kompatibel)
+      - name: Lade aktuelle Playlist herunter
         shell: powershell
         run: |
           $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm"
-          $outputPath = "C:\Users\Oliver\Desktop\IPTV-Archiv\archive\playlist_$timestamp.m3u"
+          $outputPath = "archive\playlist_$timestamp.m3u"
           Invoke-WebRequest "https://legxnd7.github.io/iptv-playlists/playlist.m3u" -OutFile $outputPath
           Write-Host "Gespeichert als $outputPath"
 
       - name: Alte Archive löschen (älter als 3 Tage)
         shell: powershell
         run: |
-          $archivePath = "C:\Users\Oliver\Desktop\IPTV-Archiv\archive"
-          Get-ChildItem $archivePath -File |
+          Get-ChildItem archive -File |
             Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-3) } |
             Remove-Item -Force -ErrorAction SilentlyContinue
 
@@ -42,7 +41,7 @@ jobs:
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
-          git add "C:\Users\Oliver\Desktop\IPTV-Archiv\archive\"
+          git add archive/
           git commit -m "Auto-update IPTV archive $(Get-Date -Format 'yyyy-MM-dd HH:mm')" -m "Automatisch erzeugt durch GitHub Runner" -ErrorAction SilentlyContinue
           if ($LASTEXITCODE -ne 0) {
             Write-Host "Keine Aenderungen zum Commit"
@@ -50,4 +49,3 @@ jobs:
           else {
             git push
           }
-
