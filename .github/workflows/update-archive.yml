@@ -3,24 +3,43 @@ name: Update IPTV Archive
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 */6 * * *'  # alle 6 Stunden automatisch ausführen
 
 jobs:
   update-archive:
     runs-on: self-hosted
+
     steps:
-      - name: Checkout repository
+      - name: Repository auschecken
         uses: actions/checkout@v4
 
-      - name: Download current playlist
+      - name: Erstelle Archiv-Ordner (falls nicht vorhanden)
+        shell: pwsh
         run: |
-          mkdir -p archive
-          curl -L https://legxnd7.github.io/iptv-playlists/playlist.m3u -o archive/playlist_$(date +%Y-%m-%d_%H-%M).m3u
+          if (-not (Test-Path "archive")) {
+            New-Item -ItemType Directory -Path "archive" | Out-Null
+          }
 
-      - name: Commit & Push archive
+      - name: Lade aktuelle Playlist herunter (Windows-kompatibel)
+        shell: pwsh
+        run: |
+          $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm"
+          $outputPath = "archive/playlist_$timestamp.m3u"
+          Invoke-WebRequest "https://legxnd7.github.io/iptv-playlists/playlist.m3u" -OutFile $outputPath
+          Write-Host "Gespeichert als $outputPath"
+
+      - name: Alte Archive löschen (älter als 3 Tage)
+        shell: pwsh
+        run: |
+          Get-ChildItem "archive" -File |
+            Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-3) } |
+            Remove-Item -Force -ErrorAction SilentlyContinue
+
+      - name: Änderungen committen und pushen
+        shell: pwsh
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
           git add archive/
-          git commit -m "Auto-update IPTV archive $(date)" || echo "No changes"
+          git commit -m "Auto-update IPTV archive $(Get-Date -Format 'yyyy-MM-dd HH:mm')" -m "Automatisch erzeugt durch GitHub Runner" || echo "Keine Änderungen zum Commit"
           git push
