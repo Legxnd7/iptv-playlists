@@ -16,7 +16,7 @@ jobs:
       - name: Erstelle Archiv-Ordner (falls nicht vorhanden)
         shell: pwsh
         run: |
-          if (-not (Test-Path "archive")) {
+          if (-not (Test-Path "C:\Users\Oliver\Desktop\IPTV-Archiv\archive")) {
             New-Item -ItemType Directory -Path "archive" | Out-Null
           }
 
