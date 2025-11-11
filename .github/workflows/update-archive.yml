@@ -45,8 +45,9 @@ jobs:
           git add "C:\Users\Oliver\Desktop\IPTV-Archiv\archive\"
           git commit -m "Auto-update IPTV archive $(Get-Date -Format 'yyyy-MM-dd HH:mm')" -m "Automatisch erzeugt durch GitHub Runner" -ErrorAction SilentlyContinue
           if ($LASTEXITCODE -ne 0) {
-            Write-Host "Keine Änderungen zum Commit"
+            Write-Host "Keine Aenderungen zum Commit"
           }
           else {
             git push
           }
+
