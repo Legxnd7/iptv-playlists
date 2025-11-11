@@ -1,0 +1,49 @@
+name: update-archive
+
+on:
+  schedule:
+    - cron: '0 */3 * * *'  # alle 3 Stunden
+  workflow_dispatch:
+
+jobs:
+  record-channels:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Record NTV
+        shell: powershell
+        run: |
+          powershell -ExecutionPolicy Bypass -File .\scripts\record_once.ps1 -streamUrl "https://livetv.mylifeisgood.net.ru/channels/ntvhd.m3u8" -slug "ntv" -duration 7200
+
+      - name: Record Rossiya 1
+        shell: powershell
+        run: |
+          powershell -ExecutionPolicy Bypass -File .\scripts\record_once.ps1 -streamUrl "https://vgtrkregion-reg.cdnvideo.ru/vgtrk/volgograd/russia1-hd/index.m3u8" -slug "russia1" -duration 7200
+
+      - name: Record TNT
+        shell: powershell
+        run: |
+          powershell -ExecutionPolicy Bypass -File .\scripts\record_once.ps1 -streamUrl "https://cdn4.skygo.mn/live/disk1/THT/HLSv3-FTA/THT.m3u8" -slug "tnt" -duration 7200
+
+      - name: Record Erste
+        shell: powershell
+        run: |
+          powershell -ExecutionPolicy Bypass -File .\scripts\record_once.ps1 -streamUrl "https://edge1.1internet.tv/dash-live2/streams/1tv-dvr/1tvdash.mpd" -slug "erste" -duration 7200
+
+      - name: Record STS
+        shell: powershell
+        run: |
+          powershell -ExecutionPolicy Bypass -File .\scripts\record_once.ps1 -streamUrl "https://cdn4.skygo.mn/live/disk1/STS/HLSv3-FTA/STS.m3u8" -slug "sts" -duration 7200
+
+      - name: Build archive index
+        shell: powershell
+        run: |
+          powershell -ExecutionPolicy Bypass -File .\scripts\make_archive_index.ps1 -outRoot "C:\Users\Oliver\Desktop\IPTV-Archiv" -indexFile ".\archive\archive_index.json"
+
+      - name: Commit index (optional)
+        run: |
+          git add archive/archive_index.json || true
+          git commit -m "Automatisches Archiv-Index-Update" || true
+          git push origin HEAD || true
