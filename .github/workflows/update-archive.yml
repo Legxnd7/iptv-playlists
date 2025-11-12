@@ -12,6 +12,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Markiere Repo als sicher
+        shell: powershell
+        run: |
+            git config --global --add safe.directory "C:/Users/Oliver/Desktop/iptv_playlists/GitHubRunner/_work/iptv-playlists/iptv-playlists"
+
+
       - name: Erstelle Archiv-Ordner (falls nicht vorhanden)
         shell: powershell
         run: |
