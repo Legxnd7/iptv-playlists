@@ -2,46 +2,40 @@ name: Update IPTV Archive
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 */6 * * *'
 
 jobs:
   update-archive:
     runs-on: self-hosted
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Markiere Repo als sicher
-        shell: powershell
-        run: |
-            git config --global --add safe.directory "C:/Users/Oliver/Desktop/iptv_playlists/GitHubRunner/_work/iptv-playlists/iptv-playlists"
-
-
-      - name: Erstelle Archiv-Ordner (falls nicht vorhanden)
-        shell: powershell
+      - name: Ensure archive folder exists
+        shell: pwsh
         run: |
           if (-not (Test-Path "archive")) {
             New-Item -ItemType Directory -Path "archive" | Out-Null
           }
 
-      - name: Lade aktuelle Playlist herunter
-        shell: powershell
+      - name: Download playlist (Windows runner)
+        shell: pwsh
         run: |
           $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm"
-          $outputPath = "archive\playlist_$timestamp.m3u"
-          Invoke-WebRequest "https://legxnd7.github.io/iptv-playlists/playlist.m3u" -OutFile $outputPath
-          Write-Host "Gespeichert als $outputPath"
+          $out = "archive/playlist_$timestamp.m3u"
+          Invoke-WebRequest "https://legxnd7.github.io/iptv-playlists/playlist.m3u" -OutFile $out
+          Write-Host "Saved $out"
 
-      - name: Commit & Push archive
-        shell: powershell
+      - name: Remove archives older than 3 days
+        shell: pwsh
+        run: |
+          Get-ChildItem "archive" -File | Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-3) } | Remove-Item -Force
+
+      - name: Commit & push (optional)
+        shell: pwsh
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
           git add archive/
-          try {
-            git commit -m "Auto-update IPTV archive $(Get-Date -Format 'yyyy-MM-dd HH:mm')" 
-          } catch {
-            Write-Host "Keine Aenderungen zum Commit"
-          }
+          git commit -m "Auto-update IPTV archive $(Get-Date -Format 'yyyy-MM-dd HH:mm')" -m "Automated archive update" -ErrorAction SilentlyContinue || Write-Host "No changes"
           git push
